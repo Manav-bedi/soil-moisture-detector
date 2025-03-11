@@ -1,0 +1,54 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(2,3,4,5,6,7);
+void setup() 
+{
+Serial.begin(9600);
+lcd.begin(16,2);
+pinMode(A1,OUTPUT);
+pinMode(A2,OUTPUT);
+pinMode(A0,INPUT);
+lcd.clear();
+lcd.setCursor(1,0);
+lcd.print("Soil Moisture");
+lcd.setCursor(4,1);
+lcd.print("Detector");
+delay(2000);
+}
+
+void loop() 
+{
+int a=analogRead(A0);
+int b=map(a,0,1024,100,0);
+Serial.print(a);
+Serial.print(" ");
+Serial.println(b);
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("Moisture:");
+lcd.print(b);
+lcd.print("%");
+if(a>800)
+{
+lcd.setCursor(0,1);
+lcd.print("PUMP:");
+lcd.print("ON");
+digitalWrite(A1,LOW);
+buzzer();
+}
+else
+{
+lcd.setCursor(0,1);
+lcd.print("PUMP:");
+lcd.print("OFF");
+digitalWrite(A1,HIGH);
+}
+delay(100);
+}
+
+void buzzer()
+{
+ digitalWrite(A2,HIGH);
+ delay(100);
+ digitalWrite(A2,LOW);
+ delay(100);
+}
